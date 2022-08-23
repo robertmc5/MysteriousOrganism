@@ -8,7 +8,7 @@ const randomDNABase = () => {
 const mockUpDNAStrand = () => {
   const newStrandArray = [];
   for (let i = 0; i < 15; i++) {
-    newStrand.push(randomDNABase());
+    newStrandArray.push(randomDNABase());
   }
   return newStrandArray;
 }
@@ -18,6 +18,25 @@ const pAequorFactory = (num, array) => {
   return {
     specimenNum: num,
     dna: array,
+    mutate() {
+      let mutation = false;
+      let randomBase = Math.floor(Math.random() * 15);
+      let mutateTo;
+      while (!mutation) {
+        mutateTo = randomDNABase();
+        if (this.dna[randomBase] !== mutateTo) {
+          this.dna[randomBase] = mutateTo;
+          mutation = true;
+        }
+      }
+      return this.dna;
+    }
   };
 }
 
+// TEST
+let squiggles = pAequorFactory(1, mockUpDNAStrand());
+console.log("Squiggles, specimen#" + squiggles.specimenNum + ", original DNA strand: [" + squiggles.dna + "]");
+squiggles.mutate();
+console.log("Squiggles DNA has mutated.");
+console.log("Squiggles, specimen#" + squiggles.specimenNum + ", mutated DNA strand:  [" + squiggles.dna + "]");
