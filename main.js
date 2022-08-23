@@ -41,6 +41,21 @@ const pAequorFactory = (num, array) => {
       let percentMatch = Math.round((match / otherPAequor.dna.length) * 100);
       console.log(`\tThe percentage of DNA that specimen #${this.specimenNum} and #${
         otherPAequor.specimenNum} have in common is ${percentMatch}%.`);
+    },
+    willLikelySurvive() {
+      let basesCorG = 0;
+      for (let base of this.dna) {
+        if (base === 'C' || base === 'G') {
+          basesCorG++;
+        }
+      }
+      let survival = (basesCorG / this.dna.length);
+      if (survival >= 0.6) {
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   };
 }
@@ -59,4 +74,14 @@ let louie = pAequorFactory(2, mockUpDNAStrand());
 console.log("Louie, specimen #" + louie.specimenNum + ", original DNA strand:     [" + louie.dna + "]");
 console.log("When comparing DNA bases between Louie and the mutated-Squiggles:");
 louie.compareDNA(squiggles);
+console.log('--------------------------------------------');
+
+// Prints likelihood of survival
+console.log("P.aequor have a likelier chance of survival if their DNA is made up of at least 60% 'C' or 'G' bases.");
+if (louie.willLikelySurvive()) {
+  console.log("Based on that ratio, Louie, specimen #" + louie.specimenNum + ", WILL likely survive.");
+}
+if (!louie.willLikelySurvive()) {
+  console.log("Based on that ratio, Louie, specimen #" + louie.specimenNum + ", will NOT likely survive.");
+}
 console.log('--------------------------------------------');
