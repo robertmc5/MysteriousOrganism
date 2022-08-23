@@ -51,6 +51,17 @@ const pAequorFactory = (num, array) => {
       }
       let survival = (basesCorG / this.dna.length);
       return (survival >= 0.6) ? true : false;
+    },
+    complementStrand() {
+      let configComplementFn = (b) => {
+        switch (b) {
+          case 'A' : return 'T';
+          case 'T' : return 'A';
+          case 'C' : return 'G';
+          case 'G' : return 'C';
+        }
+      }
+      return this.dna.map(configComplementFn);
     }
   };
 }
@@ -82,6 +93,12 @@ console.log("When comparing DNA bases between Louie and the mutated-Squiggles:")
 louie.compareDNA(squiggles);
 console.log('--------------------------------------------');
 
+// Prints complementary DNA strand
+console.log("A complementary DNA strand has 'A's match with 'T's and vice versa and 'C's match with 'G's and vice versa.");
+console.log("Louie, specimen #" + louie.specimenNum + ", original DNA strand:      [" + louie.dna + "]");
+console.log("Louie, specimen #" + louie.specimenNum + ", complementary DNA strand: [" + louie.complementStrand() + "]");
+console.log('--------------------------------------------');
+
 // Prints likelihood of survival
 console.log("P.aequor have a likelier chance of survival if their DNA is made up of at least 60% 'C' or 'G' bases.");
 if (louie.willLikelySurvive()) {
@@ -97,3 +114,4 @@ console.log("We are studying 30 instances of P.aequor that can survive in their 
 let specimenList = instancesOfpAequor.map(specimen => specimen.specimenNum + " ").join('');
 console.log(`Specimen Numbers: ${specimenList}`);
 console.log('--------------------------------------------');
+
