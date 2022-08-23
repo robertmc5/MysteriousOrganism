@@ -50,12 +50,7 @@ const pAequorFactory = (num, array) => {
         }
       }
       let survival = (basesCorG / this.dna.length);
-      if (survival >= 0.6) {
-        return true;
-      }
-      else {
-        return false;
-      }
+      return (survival >= 0.6) ? true : false;
     }
   };
 }
