@@ -60,6 +60,17 @@ const pAequorFactory = (num, array) => {
   };
 }
 
+// Creates 30 instances of pAequor that can survive in their natural environment
+let instancesOfpAequor = [];
+let specimenNumber = 1;
+while (instancesOfpAequor.length < 30) {
+  let attemptSpecimen = pAequorFactory(specimenNumber, mockUpDNAStrand());
+  if (attemptSpecimen.willLikelySurvive()) {
+    instancesOfpAequor.push(attemptSpecimen);
+  }
+  specimenNumber++;
+}
+
 // Prints DNA mutation example
 console.log('--------------------------------------------');
 let squiggles = pAequorFactory(1, mockUpDNAStrand());
@@ -84,4 +95,10 @@ if (louie.willLikelySurvive()) {
 if (!louie.willLikelySurvive()) {
   console.log("Based on that ratio, Louie, specimen #" + louie.specimenNum + ", will NOT likely survive.");
 }
+console.log('--------------------------------------------');
+
+// Prints Specimen Numbers of 30 P.aequor to be studied that will likely survive
+console.log("We are studying 30 instances of P.aequor that can survive in their natural environment.");
+let specimenList = instancesOfpAequor.map(specimen => specimen.specimenNum + " ").join('');
+console.log(`Specimen Numbers: ${specimenList}`);
 console.log('--------------------------------------------');
