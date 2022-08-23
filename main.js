@@ -20,15 +20,15 @@ const pAequorFactory = (num, array) => {
     dna: array,
     mutate() {
       let mutation = false;
-      let randomBase = Math.floor(Math.random() * 15);
+      let mutatingBase = Math.floor(Math.random() * 15);
       let mutateTo;
-      while (!mutation) {
+      do {
         mutateTo = randomDNABase();
-        if (this.dna[randomBase] !== mutateTo) {
-          this.dna[randomBase] = mutateTo;
+        if (this.dna[mutatingBase] !== mutateTo) {
+          this.dna[mutatingBase] = mutateTo;
           mutation = true;
         }
-      }
+      } while (!mutation);
       return this.dna;
     }
   };
