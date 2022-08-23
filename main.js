@@ -13,7 +13,7 @@ const mockUpDNAStrand = () => {
   return newStrandArray;
 }
 
-// Creates virtual a P.aequor organism as an object
+// Creates a virtual P.aequor organism as an object
 const pAequorFactory = (num, array) => {
   return {
     specimenNum: num,
@@ -30,13 +30,33 @@ const pAequorFactory = (num, array) => {
         }
       } while (!mutation);
       return this.dna;
+    },
+    compareDNA(otherPAequor) {
+      let match = 0;
+      for (let i = 0; i < otherPAequor.dna.length; i++) {
+        if (this.dna[i] === otherPAequor.dna[i]) {
+          match++;
+        }
+      }
+      let percentMatch = Math.round((match / otherPAequor.dna.length) * 100);
+      console.log(`\tThe percentage of DNA that specimen #${this.specimenNum} and #${
+        otherPAequor.specimenNum} have in common is ${percentMatch}%.`);
     }
   };
 }
 
-// TEST
+// Prints DNA mutation example
+console.log('--------------------------------------------');
 let squiggles = pAequorFactory(1, mockUpDNAStrand());
-console.log("Squiggles, specimen#" + squiggles.specimenNum + ", original DNA strand: [" + squiggles.dna + "]");
+console.log("Squiggles, specimen #" + squiggles.specimenNum + ", original DNA strand: [" + squiggles.dna + "]");
 squiggles.mutate();
-console.log("Squiggles DNA has mutated.");
-console.log("Squiggles, specimen#" + squiggles.specimenNum + ", mutated DNA strand:  [" + squiggles.dna + "]");
+console.log("Squiggles DNA strand has mutated one DNA base.");
+console.log("Squiggles, specimen #" + squiggles.specimenNum + ", mutated DNA strand:  [" + squiggles.dna + "]");
+console.log('--------------------------------------------');
+
+// Prints DNA percent match comparison
+let louie = pAequorFactory(2, mockUpDNAStrand());
+console.log("Louie, specimen #" + louie.specimenNum + ", original DNA strand:     [" + louie.dna + "]");
+console.log("When comparing DNA bases between Louie and the mutated-Squiggles:");
+louie.compareDNA(squiggles);
+console.log('--------------------------------------------');
