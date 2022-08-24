@@ -76,6 +76,15 @@ while (instancesOfpAequor.length < 30) {
   specimenNumber++;
 }
 
+// Helper function inverts an object key:value pair for comparison
+const invertObjectPair = obj => {
+  let inversePair = {};
+  for (let key in obj) {
+    inversePair[obj[key]] = parseInt(key);
+  }
+  return inversePair;
+}
+
 // Compares percent of DNA matches of all specimens to eachother
 const mostRelatedDNA = specimenGroup => {
   let mostRelatedPairs = [];
@@ -84,16 +93,18 @@ const mostRelatedDNA = specimenGroup => {
     for (let inner = 0; inner < specimenGroup.length; inner++) {
       if (outer === inner) 
         continue;
-      if (mostRelatedPairs.includes({[inner.toString()]: parseInt(outer)})) // NOT WORKING
+      let currentPair = {[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum};
+      if (mostRelatedPairs.includes(invertObjectPair(currentPair))) // TODO
         continue;
       let testMatch = specimenGroup[outer].compareDNA(specimenGroup[inner]);
       if (testMatch === highestMatchPercent) {
-        mostRelatedPairs.push({[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum});
+        mostRelatedPairs.push(currentPair);
       }
       if (testMatch > highestMatchPercent) {
         mostRelatedPairs = [];
-        mostRelatedPairs.push({[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum});
+        mostRelatedPairs.push(currentPair);
         highestMatchPercent = testMatch;
+        console.log(Object.entries(mostRelatedPairs[0]) + " Inverted: " + Object.entries({[inner.toString()]: outer})); // TEST
       }
     }
   }
