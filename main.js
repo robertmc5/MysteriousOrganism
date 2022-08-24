@@ -76,24 +76,28 @@ while (instancesOfpAequor.length < 30) {
   specimenNumber++;
 }
 
-// Compares percent DNA matches of all specimens to eachother
+// Compares percent of DNA matches of all specimens to eachother
 const mostRelatedDNA = specimenGroup => {
   let mostRelatedPairs = [];
   let highestMatchPercent = 0;
   for (let outer = 0; outer < specimenGroup.length; outer++) {
     for (let inner = 0; inner < specimenGroup.length; inner++) {
-      if (outer === inner) continue;
+      if (outer === inner) 
+        continue;
+      if (mostRelatedPairs.includes({[inner.toString()]: parseInt(outer)})) // NOT WORKING
+        continue;
       let testMatch = specimenGroup[outer].compareDNA(specimenGroup[inner]);
       if (testMatch === highestMatchPercent) {
-        mostRelatedPairs.push({specimenGroup[outer].specimenNum: specimenGroup[inner].specimenNum});
+        mostRelatedPairs.push({[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum});
       }
       if (testMatch > highestMatchPercent) {
         mostRelatedPairs = [];
-        mostRelatedPairs.push({specimenGroup[outer].specimenNum: specimenGroup[inner].specimenNum});
+        mostRelatedPairs.push({[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum});
         highestMatchPercent = testMatch;
       }
     }
   }
+  return mostRelatedPairs;
 }
 
 // Prints DNA mutation example
@@ -135,4 +139,7 @@ let specimenList = instancesOfpAequor.map(specimen => specimen.specimenNum + " "
 console.log(`Specimen Numbers: ${specimenList}`);
 console.log('--------------------------------------------');
 
-// console.log(instancesOfpAequor);
+// Prints highest percent of DNA matches found in the specimen group
+console.log("The specimens that have the highest percent of DNA matches to eachother:");
+console.log(mostRelatedDNA(instancesOfpAequor));
+console.log('--------------------------------------------');
