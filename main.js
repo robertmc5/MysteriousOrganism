@@ -4,7 +4,7 @@ const randomDNABase = () => {
   return dnaBases[Math.floor(Math.random() * 4)];
 }
 
-// Returns a random single stand of DNA containing 15 bases
+// Returns a random single strand of DNA containing 15 bases
 const mockUpDNAStrand = () => {
   const newStrandArray = [];
   for (let i = 0; i < 15; i++) {
@@ -39,8 +39,7 @@ const pAequorFactory = (num, array) => {
         }
       }
       let percentMatch = Math.round((match / otherPAequor.dna.length) * 100);
-      console.log(`\tThe percentage of DNA that specimen #${this.specimenNum} and #${
-        otherPAequor.specimenNum} have in common is ${percentMatch}%.`);
+      return percentMatch;
     },
     willLikelySurvive() {
       let basesCorG = 0;
@@ -68,13 +67,52 @@ const pAequorFactory = (num, array) => {
 
 // Creates 30 instances of pAequor that can survive in their natural environment
 let instancesOfpAequor = [];
-let specimenNumber = 1;
+let specimenNumber = 3;
 while (instancesOfpAequor.length < 30) {
   let attemptSpecimen = pAequorFactory(specimenNumber, mockUpDNAStrand());
   if (attemptSpecimen.willLikelySurvive()) {
     instancesOfpAequor.push(attemptSpecimen);
   }
   specimenNumber++;
+}
+
+// Helper function inverts an object key:value pair for comparison
+const invertObjectPair = obj => {
+  let inversePair = {};
+  for (let key in obj) {
+    inversePair[obj[key]] = parseInt(key);
+  }
+  return inversePair;
+}
+
+// Compares percent of DNA matches of all specimens to eachother
+const mostRelatedDNA = specimenGroup => {
+  let mostRelatedPairs = [];
+  let highestMatchPercent = 0;
+  for (let outer = 0; outer < specimenGroup.length; outer++) {
+    for (let inner = 0; inner < specimenGroup.length; inner++) {
+      if (outer === inner) 
+        continue;
+      let testMatch = specimenGroup[outer].compareDNA(specimenGroup[inner]);
+      if (testMatch === highestMatchPercent) {
+        let currentPair = {[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum};
+        let duplicate = false;
+        for (let pair of mostRelatedPairs) {
+          if (Object.keys(pair)[0] === Object.keys(invertObjectPair(currentPair))[0] &&
+            Object.values(pair)[0] === Object.values(invertObjectPair(currentPair))[0]) {
+              duplicate = true;
+          }
+        }
+        if (!duplicate) mostRelatedPairs.push(currentPair);
+      }
+      if (testMatch > highestMatchPercent) {
+        mostRelatedPairs = [];
+        highestMatchPercent = testMatch;
+        mostRelatedPairs.push({[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum});
+      }
+    }
+  }
+  return mostRelatedPairs;
 }
 
 // Prints DNA mutation example
@@ -90,7 +128,8 @@ console.log('--------------------------------------------');
 let louie = pAequorFactory(2, mockUpDNAStrand());
 console.log("Louie, specimen #" + louie.specimenNum + ", original DNA strand:     [" + louie.dna + "]");
 console.log("When comparing DNA bases between Louie and the mutated-Squiggles:");
-louie.compareDNA(squiggles);
+console.log(`\tThe percentage of DNA that specimen #${louie.specimenNum} and #${
+  squiggles.specimenNum} have in common is ${louie.compareDNA(squiggles)}%.`);
 console.log('--------------------------------------------');
 
 // Prints complementary DNA strand
@@ -115,3 +154,7 @@ let specimenList = instancesOfpAequor.map(specimen => specimen.specimenNum + " "
 console.log(`Specimen Numbers: ${specimenList}`);
 console.log('--------------------------------------------');
 
+// Prints highest percent of DNA matches found in the specimen group
+console.log("The specimens that have the highest percent of DNA matches to eachother:");
+console.log(mostRelatedDNA(instancesOfpAequor));
+console.log('--------------------------------------------');
