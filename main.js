@@ -86,9 +86,9 @@ const invertObjectPair = obj => {
 }
 
 // Compares percent of DNA matches of all specimens to eachother
+let mostRelatedPairs = [];
+var highestMatchPercent = 0;
 const mostRelatedDNA = specimenGroup => {
-  let mostRelatedPairs = [];
-  let highestMatchPercent = 0;
   for (let outer = 0; outer < specimenGroup.length; outer++) {
     for (let inner = 0; inner < specimenGroup.length; inner++) {
       if (outer === inner) 
@@ -155,6 +155,14 @@ console.log(`Specimen Numbers: ${specimenList}`);
 console.log('--------------------------------------------');
 
 // Prints highest percent of DNA matches found in the specimen group
-console.log("The specimens that have the highest percent of DNA matches to eachother:");
-console.log(mostRelatedDNA(instancesOfpAequor));
+mostRelatedDNA(instancesOfpAequor);
+if (mostRelatedPairs.length === 1) {
+  console.log("A single specimen pair has the highest percent of DNA matches to eachother:");
+}
+else {
+  console.log(`There are ${mostRelatedPairs.length} specimen pairs that have the highest percent of DNA matches to eachother:`);
+}
+for (let mostPair of mostRelatedPairs) {
+  console.log(`\tSpecimen #${Object.keys(mostPair)[0]} and Specimen #${Object.values(mostPair)[0]} have ${highestMatchPercent}% DNA matching.`);
+}
 console.log('--------------------------------------------');
