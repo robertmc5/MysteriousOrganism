@@ -93,18 +93,22 @@ const mostRelatedDNA = specimenGroup => {
     for (let inner = 0; inner < specimenGroup.length; inner++) {
       if (outer === inner) 
         continue;
-      let currentPair = {[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum};
-      if (mostRelatedPairs.includes(invertObjectPair(currentPair))) // TODO
-        continue;
       let testMatch = specimenGroup[outer].compareDNA(specimenGroup[inner]);
       if (testMatch === highestMatchPercent) {
-        mostRelatedPairs.push(currentPair);
+        let currentPair = {[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum};
+        let duplicate = false;
+        for (let pair of mostRelatedPairs) {
+          if (Object.keys(pair)[0] === Object.keys(invertObjectPair(currentPair))[0] &&
+            Object.values(pair)[0] === Object.values(invertObjectPair(currentPair))[0]) {
+              duplicate = true;
+          }
+        }
+        if (!duplicate) mostRelatedPairs.push(currentPair);
       }
       if (testMatch > highestMatchPercent) {
         mostRelatedPairs = [];
-        mostRelatedPairs.push(currentPair);
         highestMatchPercent = testMatch;
-        console.log(Object.entries(mostRelatedPairs[0]) + " Inverted: " + Object.entries({[inner.toString()]: outer})); // TEST
+        mostRelatedPairs.push({[specimenGroup[outer].specimenNum]: specimenGroup[inner].specimenNum});
       }
     }
   }
